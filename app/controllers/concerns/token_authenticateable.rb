@@ -1,4 +1,4 @@
-module TokenAuthenticable
+module TokenAuthenticateable
   extend ActiveSupport::Concern
 
   def authenticate_resource_from_token!
@@ -6,7 +6,9 @@ module TokenAuthenticable
     user_email = params[resource_name] && params[resource_name][:email]
     user = user_email && User.find_by_email(user_email)
     if user && Devise.secure_compare(user.authentication_token, params[resource_name][:token])
-      sign_in resource_name, user
+      @current_user = user
+    else
+      unauthorized_response
     end
   end
 
@@ -14,4 +16,8 @@ module TokenAuthenticable
     {json: {}, status: :unauthorized}
   end
 
+  private
+  def permitted_params
+    params.require(:api_user).permit(:email, :token)
+  end
 end

@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::API
-  include TokenAuthenticable
-  skip_before_action :verify_authenticity_token,
-                     if: Proc.new { |c| c.request.format == 'application/json' }
-  #  skip_before_action :verify_authenticity_token
+  include TokenAuthenticateable
+  include ErrorHandler
   before_action :authenticate_resource_from_token!
 
   def resource_name
