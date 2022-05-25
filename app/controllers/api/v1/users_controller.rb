@@ -9,8 +9,4 @@ class Api::V1::UsersController < ApplicationController
     user = User.find_by_name(params[:name])
     render json: {owner_name: user.try(:name)}
   end
-  private
-  def post_params
-    params.require(:post).permit(:comment)
-  end
 end
